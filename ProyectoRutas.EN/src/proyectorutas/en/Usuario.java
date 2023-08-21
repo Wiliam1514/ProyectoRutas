@@ -1,23 +1,39 @@
 package proyectorutas.en;
 
+import java.time.LocalDate;
+
 public class Usuario {
     private int id;
+    private int idRol;
     private String nombre;
     private String apellido;
-    private String correoElectronico;
-    private String contraseña;
-    private int idRol;
+    private String login;
+    private String password;
+   private byte estatus;
+    private LocalDate fechaRegistro;
+    private int top_aux;
+    private String confirmPassword_aux;
+    private Rol rol;
+    
 
     public Usuario() {
     }
 
-    public Usuario(int id, String nombre, String apellido, String correoElectronico, String contraseña, int idRol) {
+    public Usuario(int id, int idRol, String nombre, String apellido, String login, String password, byte estatus, LocalDate fechaRegistro, int top_aux,
+            String confirmPassword_aux, Rol rol) {
         this.id = id;
+        this.idRol = idRol;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.correoElectronico = correoElectronico;
-        this.contraseña = contraseña;
-        this.idRol = idRol;
+        this.login = login;
+        this.password = password;
+        this.estatus = estatus;
+        this.fechaRegistro = fechaRegistro;
+        this.top_aux = top_aux;
+        this.confirmPassword_aux = confirmPassword_aux;
+        this.rol = rol;
+        
+        
     }
 
     public int getId() {
@@ -26,6 +42,13 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
     }
 
     public String getNombre() {
@@ -44,27 +67,64 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getlogin() {
+        return login;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setlogin(String login) {
+        this.login = login;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getpassword() {
+        return password;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setpassword(String password) {
+        this.password = password;
     }
 
-    public int getIdRol() {
-        return idRol;
+    public byte getEstatus() {
+        return estatus;
     }
 
-    public void setIdRol(int idRol) {
-        this.idRol = idRol;
+    public void setEstatus(byte estatus) {
+        this.estatus = estatus;
+    }
+
+    public LocalDate getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDate fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public int getTop_aux() {
+        return top_aux;
+    }
+
+    public void setTop_aux(int top_aux) {
+        this.top_aux = top_aux;
+    }
+
+    public String getConfirmPassword_aux() {
+        return confirmPassword_aux;
+    }
+
+    public void setConfirmPassword_aux(String confirmPassword_aux) {
+        this.confirmPassword_aux = confirmPassword_aux;
+    }
+    public Rol getRol() {
+    return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    
+    public class EstatusUsuario{
+        public static final byte ACTIVO = 1;
+        public static final byte INACTIVO = 2;
     }
 }
