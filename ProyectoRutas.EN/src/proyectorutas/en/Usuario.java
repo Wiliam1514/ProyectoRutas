@@ -67,19 +67,19 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public String getlogin() {
+    public String getLogin() {
         return login;
     }
 
-    public void setlogin(String login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
-    public String getpassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setpassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -99,7 +99,7 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public int getTop_aux() {
+   public int getTop_aux() {
         return top_aux;
     }
 

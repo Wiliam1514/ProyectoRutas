@@ -5,50 +5,54 @@
 package proyectorutas.accesoadatos;
 import java.util.*;
 import java.sql.*;
+import static proyectorutas.accesoadatos.RolDAL.asignarDatosResultSet;
+import static proyectorutas.accesoadatos.RolDAL.obtenerCampos;
+import static proyectorutas.accesoadatos.RolDAL.querySelect;
 import proyectorutas.en.*;
 /**
  *
  * @author MINEDUCYT
  */
-public class RolDAL {
+public class DepartamentoDAL {
+    
     static String obtenerCampos()
     {
-        return "r.Id, r.NombreRol";
+        return "d.Id, d.Nombre";
     }
-    private static String obtenerSelect(Rol pRol)
+    private static String obtenerSelect(Departamento pDepartamento)
     {
         String sql;
         sql = "Select ";
-        if(pRol.getTop_aux() > 0 && 
+        if(pDepartamento.getTop_aux() > 0 && 
            ComunDB.TIPODB == ComunDB.TipoDB.SQLSERVER)
         {
-            sql += "Top " + pRol.getTop_aux() + " ";
+            sql += "Top " + pDepartamento.getTop_aux() + " ";
         }
-        sql += (obtenerCampos() + " From Rol r");
+        sql += (obtenerCampos() + " From Departamento d");
         return sql;
     }
     
-    private static String agregarOrderBy(Rol pRol)
+    private static String agregarOrderBy(Departamento pDepartamento)
     {
-        String sql = " Order by r.Id Desc";
-        if(pRol.getTop_aux() > 0 && 
+        String sql = " Order by d.Id Desc";
+        if(pDepartamento.getTop_aux() > 0 && 
         ComunDB.TIPODB == ComunDB.TipoDB.MYSQL)
         {
-            sql += "Limit " + pRol.getTop_aux() + " ";
+            sql += "Limit " + pDepartamento.getTop_aux() + " ";
         }
         return sql;
     }
-    public static int crear(Rol pRol) throws Exception
+    public static int crear(Departamento pDepartamento) throws Exception
     {
         int result;
         String sql;
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            sql = "Insert Into Rol(NombreRol) Values(?)";
+            sql = "Insert Into Departamento(Nombre) Values(?)";
             try(PreparedStatement st = 
                 ComunDB.createPreparedStatement(conn, sql);)
             {
-                st.setString(1, pRol.getNombreRol());
+                st.setString(1, pDepartamento.getNombreDepartamento());
                 result = st.executeUpdate();
                 st.close();
             }
@@ -63,18 +67,17 @@ public class RolDAL {
         }
         return result;
     }
-    
-    public static int modificar(Rol pRol) throws Exception 
+    public static int modificar(Departamento pDepartamento) throws Exception 
     {
         int result;
         String sql;
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            sql = "Update Rol Set NombreRol = ? Where Id = ?";
+            sql = "Update Departamento Set Nombre = ? Where Id = ?";
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
-                ps.setString(1, pRol.getNombreRol());
-                ps.setInt(2, pRol.getId());
+                ps.setString(1, pDepartamento.getNombreDepartamento());
+                ps.setInt(2, pDepartamento.getId());
                 result = ps.executeUpdate();
                 ps.close();
             }
@@ -89,17 +92,16 @@ public class RolDAL {
         }
         return result;
     }
-    
-    public static int eliminar(Rol pRol) throws Exception
+    public static int eliminar(Departamento pDepartamento) throws Exception
     {
         int result;
         String sql;
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            sql = "Delete From Rol Where Id = ?";
+            sql = "Delete From Departamento Where Id = ?";
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
-                ps.setInt(1, pRol.getId());
+                ps.setInt(1, pDepartamento.getId());
                 result = ps.executeUpdate();
                 ps.close();
             }
@@ -114,25 +116,23 @@ public class RolDAL {
         }
         return result;
     }
-    
-    static int asignarDatosResultSet(Rol pRol, ResultSet pResultSet, int pIndex) throws Exception
+    static int asignarDatosResultSet(Departamento pDepartamento, ResultSet pResultSet, int pIndex) throws Exception
     {
         pIndex++;
-        pRol.setId(pResultSet.getInt(pIndex));
+        pDepartamento.setId(pResultSet.getInt(pIndex));
         pIndex++;
-        pRol.setNombreRol(pResultSet.getString(pIndex));
+        pDepartamento.setNombreDepartamento(pResultSet.getString(pIndex));
         return pIndex;
     }
-    
-    private static void obtenerDatos(PreparedStatement pPS, ArrayList<Rol> pRoles) throws Exception
+     private static void obtenerDatos(PreparedStatement pPS, ArrayList<Departamento> pDepartamentos) throws Exception
     {
         try(ResultSet resultset = ComunDB.obtenerResulSet(pPS);)
         {
             while(resultset.next())
             {
-                Rol rol = new Rol();
-                asignarDatosResultSet(rol,resultset,0);
-                pRoles.add(rol);
+                Departamento departamento = new Departamento();
+                asignarDatosResultSet(departamento,resultset,0);
+                pDepartamentos.add(departamento);
             }
             resultset.close();
         }
@@ -140,20 +140,20 @@ public class RolDAL {
         {
             throw ex;
         }
+        
     }
-    
-    public static Rol obtenerPorId(Rol pRol) throws Exception
+     public static Departamento obtenerPorId(Departamento pDepartamento) throws Exception
     {
-        Rol rol = new Rol();
-        ArrayList<Rol> roles = new ArrayList();
+        Departamento departamento = new Departamento();
+        ArrayList<Departamento> departamentos = new ArrayList();
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            String sql = obtenerSelect(pRol);
+            String sql = obtenerSelect(pDepartamento);
             sql += " Where Id = ?";
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
-                ps.setInt(1, pRol.getId());
-                obtenerDatos(ps, roles);
+                ps.setInt(1, pDepartamento.getId());
+                obtenerDatos(ps, departamentos);
                 ps.close();
             }
             catch(Exception ex)
@@ -165,24 +165,23 @@ public class RolDAL {
         {
             throw ex;
         }
-        if(roles.size() > 0)
+        if(departamentos.size() > 0)
         {
-            rol = roles.get(0);
+            departamento = departamentos.get(0);
         }
-        return rol;
+        return departamento;
     }
-
-    public static ArrayList<Rol> obtenerTodos() throws Exception
+     public static ArrayList<Departamento> obtenerTodos() throws Exception
     {
-        Rol rol = new Rol();
-        ArrayList<Rol> roles = new ArrayList();
+        Departamento departamento = new Departamento();
+        ArrayList<Departamento> departamentos = new ArrayList();
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            String sql = obtenerSelect(new Rol());
-            sql += agregarOrderBy(new Rol());
+            String sql = obtenerSelect(new Departamento());
+            sql += agregarOrderBy(new Departamento());
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
-                obtenerDatos(ps, roles);
+                obtenerDatos(ps, departamentos);
                 ps.close();
             }
             catch(Exception ex)
@@ -195,53 +194,51 @@ public class RolDAL {
             throw ex;
         }
         
-        return roles;
+        return departamentos;
     }
-    
-    static void querySelect(Rol pRol, ComunDB.UtilQuery pUtilQuery) throws Exception
+     static void querySelect(Departamento pDepartamento, ComunDB.UtilQuery pUtilQuery) throws Exception
     {
         PreparedStatement statement = pUtilQuery.getStatement();
-        if(pRol.getId() > 0)
+        if(pDepartamento.getId() > 0)
         {
-            pUtilQuery.AgregarWhereAnd(" r.Id = ? ");
+            pUtilQuery.AgregarWhereAnd(" d.Id = ? ");
             if(statement != null)
             {
                 statement.setInt(pUtilQuery.getNumWhere(), 
-                        pRol.getId());
+                        pDepartamento.getId());
             }
         }
         
-        if(pRol.getNombreRol() != null && 
-           pRol.getNombreRol().trim().isEmpty() == false)
+        if(pDepartamento.getNombreDepartamento() != null && 
+           pDepartamento.getNombreDepartamento().trim().isEmpty() == false)
         {
-            pUtilQuery.AgregarWhereAnd(" r.NombreRol Like ? ");
+            pUtilQuery.AgregarWhereAnd(" d.Nombre Like ? ");
             if(statement != null)
             {
                 statement.setString(pUtilQuery.getNumWhere(), 
-                        "%" + pRol.getNombreRol() + "%");
+                        "%" + pDepartamento.getNombreDepartamento() + "%");
             }
         }
     }
-    
-    public static ArrayList<Rol> buscar(Rol pRol) throws Exception
+     public static ArrayList<Departamento> buscar(Departamento pDepartamento) throws Exception
     {
-        ArrayList<Rol> roles = new ArrayList();
+        ArrayList<Departamento> departamentos = new ArrayList();
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            String sql = obtenerSelect(pRol);
+            String sql = obtenerSelect(pDepartamento);
             ComunDB comundb = new ComunDB();
             ComunDB.UtilQuery utilQuery = 
             comundb.new UtilQuery(sql,null,0);
-            querySelect(pRol, utilQuery);
+            querySelect(pDepartamento, utilQuery);
             sql = utilQuery.getSQL();
-            sql += agregarOrderBy(pRol);
+            sql += agregarOrderBy(pDepartamento);
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
                 utilQuery.setStatement(ps);
                 utilQuery.setSQL(null);
                 utilQuery.setNumWhere(0);
-                querySelect(pRol, utilQuery);
-                obtenerDatos(ps, roles);
+                querySelect(pDepartamento, utilQuery);
+                obtenerDatos(ps, departamentos);
                 ps.close();
             }
             catch(Exception ex)
@@ -254,6 +251,7 @@ public class RolDAL {
             throw ex;
         }
         
-        return roles;
+        return departamentos;
     }
+     
 }

@@ -70,7 +70,7 @@ public class UsuarioDAL {
             sql += " WHERE u.Id<>? AND u.Login=?";
             try (PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);) { // Obtener el PreparedStatement desde la clase ComunDB
                 ps.setInt(1, pUsuario.getId());  // Agregar el parametros a la consulta donde estan el simbolo ? #1 
-                ps.setString(2, pUsuario.getlogin());  // Agregar el parametros a la consulta donde estan el simbolo ? #2 
+                ps.setString(2, pUsuario.getLogin());  // Agregar el parametros a la consulta donde estan el simbolo ? #2 
                 obtenerDatos(ps, usuarios); // Llenar el ArrayList de USuario con las fila que devolvera la consulta SELECT a la tabla de Usuario
                 ps.close(); // Cerrar el PreparedStatement
             } catch (SQLException ex) {
@@ -85,7 +85,7 @@ public class UsuarioDAL {
             Usuario usuario;
              // Se solucciono tenia valor de 1 cuando debe de ser cero
             usuario = usuarios.get(0); // Si el ArrayList de Usuario trae un registro o mas obtenemos solo el primero 
-            if (usuario.getId() > 0 && usuario.getlogin().equals(pUsuario.getlogin())) {
+            if (usuario.getId() > 0 && usuario.getLogin().equals(pUsuario.getLogin())) {
                 // Si el Id de Usuario es mayor a cero y el Login que se busco en la tabla de Usuario es igual al que solicitamos
                 // en los parametros significa que el login ya existe en la base de datos y devolvemos true en la variable "existe"
                 existe = true;
@@ -110,11 +110,11 @@ public class UsuarioDAL {
                 try(PreparedStatement st = 
                     ComunDB.createPreparedStatement(conn, sql);)
                 {
-                    st.setInt(1, pUsuario.getId());
+                    st.setInt(1, pUsuario.getIdRol());
                     st.setString(2, pUsuario.getNombre());
                     st.setString(3, pUsuario.getApellido());
-                    st.setString(4, pUsuario.getlogin());
-                    st.setString(5, encriptarMD5(pUsuario.getpassword()));
+                    st.setString(4, pUsuario.getLogin());
+                    st.setString(5, encriptarMD5(pUsuario.getPassword()));
                     st.setByte(6, pUsuario.getEstatus());
                     st.setDate(7, java.sql.Date.valueOf(LocalDate.now()));
                     result = st.executeUpdate();
@@ -151,7 +151,7 @@ public class UsuarioDAL {
                     ps.setInt(1, pUsuario.getIdRol()); // agregar el parametro a la consulta donde estan el simbolo ? #1  
                     ps.setString(2, pUsuario.getNombre()); // agregar el parametro a la consulta donde estan el simbolo ? #2  
                     ps.setString(3, pUsuario.getApellido()); // agregar el parametro a la consulta donde estan el simbolo ? #3  
-                    ps.setString(4, pUsuario.getlogin()); // agregar el parametro a la consulta donde estan el simbolo ? #4  
+                    ps.setString(4, pUsuario.getLogin()); // agregar el parametro a la consulta donde estan el simbolo ? #4  
                     ps.setByte(5, pUsuario.getEstatus()); // agregar el parametro a la consulta donde estan el simbolo ? #5  
                     ps.setInt(6, pUsuario.getId()); // agregar el parametro a la consulta donde estan el simbolo ? #6  
                     result = ps.executeUpdate(); // ejecutar la consulta UPDATE en la base de datos
@@ -204,7 +204,7 @@ public class UsuarioDAL {
         pIndex++;
         pUsuario.setApellido(pResultSet.getString(pIndex)); // index 4
         pIndex++;
-        pUsuario.setlogin(pResultSet.getString(pIndex)); // index 5
+        pUsuario.setLogin(pResultSet.getString(pIndex)); // index 5
         pIndex++;
         pUsuario.setEstatus(pResultSet.getByte(pIndex)); // index 6
         pIndex++;
@@ -334,11 +334,11 @@ public class UsuarioDAL {
             }
         }
         // Verificar si se va incluir el campo Login en el filtro de la consulta SELECT de la tabla de Usuario
-        if (pUsuario.getlogin() != null && pUsuario.getlogin().trim().isEmpty() == false) {
+        if (pUsuario.getLogin() != null && pUsuario.getLogin().trim().isEmpty() == false) {
             pUtilQuery.AgregarWhereAnd(" u.Login=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
-                statement.setString(pUtilQuery.getNumWhere(), pUsuario.getlogin());
+                statement.setString(pUtilQuery.getNumWhere(), pUsuario.getLogin());
             }
         }
         // Verificar si se va incluir el campo Estatus en el filtro de la consulta SELECT de la tabla de Usuario
@@ -384,57 +384,55 @@ public class UsuarioDAL {
     // comparando el Login, Password, Estatus en la base de datos
 
 
-    public static Usuario login(Usuario pUsuario) throws Exception
-    {
-        Usuario usuario = new Usuario();
-        ArrayList<Usuario> usuarios = new ArrayList();
-        String password = encriptarMD5(pUsuario.getpassword());
-        try(Connection conn = ComunDB.obtenerConexion();)
-        {
-            String sql = obtenerSelect(pUsuario);
-            sql += " Where u.Login = ? And u.Password = ? And "
-                    + "u.Estatus = ?";
-            try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
-            {
-                ps.setString(1, pUsuario.getlogin());
-                ps.setString(2, password);
-                ps.setByte(3, Byte.parseByte("1"));
-                obtenerDatos(ps, usuarios);
-                ps.close();
-            }
-            catch(SQLException ex)
-            {
-                throw ex;
-            }
-            conn.close();
-        }
-        catch(SQLException ex)
-        {
+    public static Usuario login(Usuario pUsuario) throws Exception {
+    Usuario usuario = new Usuario();
+    ArrayList<Usuario> usuarios = new ArrayList();
+    String password = encriptarMD5(pUsuario.getPassword());
+
+    try (Connection conn = ComunDB.obtenerConexion();) {
+        String sql = obtenerSelect(pUsuario);
+        sql += " Where u.Login = ? And u.Password = ? And u.Estatus = ?";
+        try (PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);) {
+            ps.setString(1, pUsuario.getLogin());
+            ps.setString(2, password);
+            ps.setByte(3, Byte.parseByte("1"));
+            obtenerDatos(ps, usuarios);
+            ps.close();
+        } catch (SQLException ex) {
             throw ex;
         }
-        if(usuarios.size() > 0)
-        {
-            usuario = usuarios.get(0);
-        }
-        return usuario;
+        conn.close();
+    } catch (SQLException ex) {
+        throw ex;
     }
+
+    if (usuarios.size() > 0) {
+        usuario = usuarios.get(0);
+    }
+    
+    // Agrega una instrucción println para depuración
+    System.out.println(usuarios);
+
+    return usuario;
+}
+
     
     // Metodo para cambiar el password de un Usuario el cual solo se puede cambiar si envia el password actual correctamente
     public static int cambiarPassword(Usuario pUsuario, String pPasswordAnt) throws Exception {
         int result;
         String sql;
         Usuario usuarioAnt = new Usuario();
-        usuarioAnt.setlogin(pUsuario.getlogin());
-        usuarioAnt.setpassword(pPasswordAnt);
+        usuarioAnt.setLogin(pUsuario.getLogin());
+        usuarioAnt.setPassword(pPasswordAnt);
         Usuario usuarioAut = login(usuarioAnt); // Obtenemos el Usuario autorizado validandolo en el metodo de login
         // Si el usuario que retorno el metodo de login tiene el Id mayor a cero y el Login es igual que el Login del Usuario que viene
         // en el parametro es un Usuario Autorizado
-        if (usuarioAut.getId() > 0 && usuarioAut.getlogin().equals(pUsuario.getlogin())) {
+        if (usuarioAut.getId() > 0 && usuarioAut.getLogin().equals(pUsuario.getLogin())) {
             try (Connection conn = ComunDB.obtenerConexion();) { // Obtener la conexion desde la clase ComunDB y encerrarla en try para cierre automatico
                 sql = "UPDATE Usuario SET Password=? WHERE Id=?"; // Crear la consulta Update a la tabla de Usuario para poder modificar el Password
                 try (PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);) { // Obtener el PreparedStatement desde la clase ComunDB
                     // Agregar el parametro a la consulta donde estan el simbolo ? #1 pero antes encriptar el password para enviarlo encriptado
-                    ps.setString(1, encriptarMD5(pUsuario.getpassword())); //
+                    ps.setString(1, encriptarMD5(pUsuario.getPassword())); //
                     ps.setInt(2, pUsuario.getId()); // Agregar el parametro a la consulta donde estan el simbolo ? #2 
                     result = ps.executeUpdate(); // Ejecutar la consulta UPDATE en la base de datos
                     ps.close(); // Cerrar el PreparedStatement

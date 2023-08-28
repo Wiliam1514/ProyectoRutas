@@ -2,25 +2,36 @@ package proyectorutas.en;
 
 public class Ruta {
     private int id;
+     private int idDepartamento;
     private String nombreRuta;
-    private String descripcion;
-    private String horario;
-    private int idDepartamento;
-    private int idConductor;
-    private int idAutobus;
+    private String recorrido;
+    private String puntoSalida;
+    private String puntoLlegada;
+    private String horaInicio;
+    private String horaFin;
+    private String codigoBus;
+    private int top_aux;
+     private Departamento departamento;
+    
+    /*private int idConductor;
+    private int idAutobus;*/
 
     public Ruta() {
     }
 
-    public Ruta(int id, String nombreRuta, String descripcion, String horario,
-                int idDepartamento, int idConductor, int idAutobus) {
+    public Ruta(int id, String nombreRuta, String recorrido, String puntoSalida, String puntoLlegada, String horaInicio,
+               String horaFin, String codigoBus,int top_aux,int idDepartamento) {
         this.id = id;
         this.nombreRuta = nombreRuta;
-        this.descripcion = descripcion;
-        this.horario = horario;
+        this.recorrido = recorrido;
+        this.puntoSalida = puntoSalida;
+        this.puntoLlegada = puntoLlegada;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.codigoBus = codigoBus;
+        this.top_aux = top_aux;
         this.idDepartamento = idDepartamento;
-        this.idConductor = idConductor;
-        this.idAutobus = idAutobus;
+        
     }
 
     public int getId() {
@@ -39,20 +50,52 @@ public class Ruta {
         this.nombreRuta = nombreRuta;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getRecorrido() {
+        return recorrido;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setRecorrido(String recorrido) {
+        this.recorrido = recorrido;
     }
 
-    public String getHorario() {
-        return horario;
+    public String getPuntoSalida() {
+        return puntoSalida;
     }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
+    public void setPuntoSalida(String puntoSalida) {
+        this.puntoSalida = puntoSalida;
+    }
+    public String getPuntoLlegada() {
+        return puntoLlegada;
+    }
+    public void setPuntoLlegada(String puntoLlegada) {
+        this.puntoLlegada = puntoLlegada;
+    }
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+    public String getHoraFin(){
+        return horaFin;
+    }
+    public void setHoraFin (String horaFin){
+        this.horaFin = horaFin;
+    }
+    public String getCodigoBus (){
+        return codigoBus;
+    }
+    public void setCodigoBus (String codigoBus ){
+        this.codigoBus = codigoBus;
+    }
+    public int getTop_aux() {
+        return top_aux;
+    }
+
+    public void setTop_aux(int top_aux) {
+        this.top_aux = top_aux;
     }
 
     public int getIdDepartamento() {
@@ -62,20 +105,11 @@ public class Ruta {
     public void setIdDepartamento(int idDepartamento) {
         this.idDepartamento = idDepartamento;
     }
-
-    public int getIdConductor() {
-        return idConductor;
+    public Departamento  getDepartamento() {
+    return departamento;
     }
 
-    public void setIdConductor(int idConductor) {
-        this.idConductor = idConductor;
-    }
-
-    public int getIdAutobus() {
-        return idAutobus;
-    }
-
-    public void setIdAutobus(int idAutobus) {
-        this.idAutobus = idAutobus;
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 }
