@@ -14,8 +14,8 @@ import proyectorutas.en.Ruta;
 public class RutaDAL {
     static String obtenerCampos()
     {
-        return "r.Id, r.IdRol, r.NombreRuta, r.Recorrido, r.PuntoSalida, r.PuntoLlegada" 
-                + ", r.HoraInicio, r.HoraFin, r.CodigoBus";
+        return "ru.Id, ru.IdDepartamento, ru.NombreRuta, ru.Recorrido, ru.PuntoSalida, ru.PuntoLlegada" 
+                + ", ru.HoraInicio, ru.HoraFin, ru.CodigoBus";
     }
     private static String obtenerSelect(Ruta pRuta)
     {
@@ -26,13 +26,13 @@ public class RutaDAL {
         {
             sql += "Top " + pRuta.getTop_aux() + " ";
         }
-        sql += (obtenerCampos() + " From Ruta r");
+        sql += (obtenerCampos() + " From Ruta ru");
         return sql;
     }
     
     private static String agregarOrderBy(Ruta pRuta)
     {
-        String sql = " Order by u.Id Desc";
+        String sql = " Order by ru.Id Desc";
         if(pRuta.getTop_aux() > 0 && 
         ComunDB.TIPODB == ComunDB.TipoDB.MYSQL)
         {
@@ -159,36 +159,41 @@ public class RutaDAL {
         
     }
     private static void obtenerDatosIncluirDepartamento(PreparedStatement pPS, ArrayList<Ruta> pRutas) throws Exception {
-        try (ResultSet resultSet = ComunDB.obtenerResulSet(pPS);) { // obtener el ResultSet desde la clase ComunDB
-            HashMap<Integer, Departamento> departamentoMap = new HashMap(); //crear un HashMap para automatizar la creacion de instancias de la clase Rol
-            while (resultSet.next()) { // Recorrer cada una de la fila que regresa la consulta  SELECT de la tabla Usuario JOIN a la tabla de Rol
-                Ruta ruta = new Ruta();
-                 // Llenar las propiedaddes de la Entidad Usuario con los datos obtenidos de la fila en el ResultSet
-                int index = asignarDatosResultSet(ruta, resultSet, 0);
-                if (departamentoMap.containsKey(ruta.getIdDepartamento()) == false) { // verificar que el HashMap aun no contenga el Rol actual
-                    Departamento departamento = new Departamento();
-                    // en el caso que el Rol no este en el HashMap se asignara
-                    DepartamentoDAL.asignarDatosResultSet(departamento, resultSet, index);
-                    departamentoMap.put(departamento.getId(), departamento); // agregar el Rol al  HashMap
-                    ruta.setDepartamento(departamento); // agregar el Rol al Usuario
-                } else {
-                    // En el caso que el Rol existe en el HashMap se agregara automaticamente al Usuario
-                    ruta.setDepartamento(departamentoMap.get(ruta.getIdDepartamento())); 
-                }
-                pRutas.add(ruta); // Agregar el Usuario de la fila actual al ArrayList de Usuario
+    try (ResultSet resultSet = ComunDB.obtenerResulSet(pPS)) {
+        HashMap<Integer, Departamento> departamentoMap = new HashMap();
+
+        while (resultSet.next()) {
+            Ruta ruta = new Ruta();
+            int index = asignarDatosResultSet(ruta, resultSet, 0);
+            
+            // Agregar una impresión para mostrar los datos de la ruta
+            System.out.println(ruta);
+
+            if (departamentoMap.containsKey(ruta.getIdDepartamento()) == false) {
+                Departamento departamento = new Departamento();
+                DepartamentoDAL.asignarDatosResultSet(departamento, resultSet, index);
+                departamentoMap.put(departamento.getId(), departamento);
+                ruta.setDepartamento(departamento);
+            } else {
+                ruta.setDepartamento(departamentoMap.get(ruta.getIdDepartamento()));
             }
-            resultSet.close(); // cerrar el ResultSet
-        } catch (SQLException ex) {
-            throw ex; // enviar al siguiente metodo el error al obtener ResultSet de la clase ComunDB   en el caso que suceda 
+            System.out.println(ruta);
+            pRutas.add(ruta);
+            
         }
+        resultSet.close();
+    } catch (SQLException ex) {
+        throw ex;
     }
+}
+
      public static Ruta obtenerPorId(Ruta pRuta) throws Exception {
         Ruta ruta = new Ruta();
         ArrayList<Ruta> rutas = new ArrayList();
         try (Connection conn = ComunDB.obtenerConexion();) { // Obtener la conexion desde la clase ComunDB y encerrarla en try para cierre automatico
             String sql = obtenerSelect(pRuta); // obtener la consulta SELECT de la tabla Usuario
              // Concatenar a la consulta SELECT de la tabla Usuario el WHERE  para comparar el campo Id
-            sql += " WHERE r.Id=?";
+            sql += " WHERE ru.Id=?";
             try (PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);) { // obtener el PreparedStatement desde la clase ComunDB
                 ps.setInt(1, pRuta.getId()); // agregar el parametro a la consulta donde estan el simbolo ? #1 
                 obtenerDatos(ps, rutas); // Llenar el ArrayList de Usuario con las fila que devolvera la consulta SELECT a la tabla de Usuario
@@ -230,7 +235,7 @@ public class RutaDAL {
      static void querySelect(Ruta pRuta, ComunDB.UtilQuery pUtilQuery) throws SQLException {
         PreparedStatement statement = pUtilQuery.getStatement(); // obtener el PreparedStatement al cual aplicar los parametros
         if (pRuta.getId() > 0) { // verificar si se va incluir el campo Id en el filtro de la consulta SELECT de la tabla de Usuario
-            pUtilQuery.AgregarWhereAnd(" r.Id=? "); // agregar el campo Id al filtro de la consulta SELECT y agregar el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.Id=? "); // agregar el campo Id al filtro de la consulta SELECT y agregar el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Id a la consulta SELECT de la tabla de Usuario
                 statement.setInt(pUtilQuery.getNumWhere(), pRuta.getId());
@@ -238,7 +243,7 @@ public class RutaDAL {
         }
         // verificar si se va incluir el campo IdRol en el filtro de la consulta SELECT de la tabla de Usuario
         if (pRuta.getIdDepartamento()> 0) {
-            pUtilQuery.AgregarWhereAnd(" r.IdDepartamento=? "); // agregar el campo IdRol al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.IdDepartamento=? "); // agregar el campo IdRol al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo IdRol a la consulta SELECT de la tabla de Usuario
                 statement.setInt(pUtilQuery.getNumWhere(), pRuta.getIdDepartamento());
@@ -246,7 +251,7 @@ public class RutaDAL {
         }
         // verificar si se va incluir el campo Nombre en el filtro de la consulta SELECT de la tabla de Usuario
         if (pRuta.getNombreRuta()!= null && pRuta.getNombreRuta().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.Nombre LIKE ? "); // agregar el campo Nombre al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.NombreRuta LIKE ? "); // agregar el campo Nombre al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Nombre a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), "%" + pRuta.getNombreRuta() + "%");
@@ -254,7 +259,7 @@ public class RutaDAL {
         }
         // Verificar si se va incluir el campo Apellido en el filtro de la consulta SELECT de la tabla de Usuario
         if (pRuta.getRecorrido()!= null && pRuta.getRecorrido().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.Recorrido LIKE ? "); // agregar el campo Apellido al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.Recorrido LIKE ? "); // agregar el campo Apellido al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Apellido a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), "%" + pRuta.getRecorrido()+ "%");
@@ -262,7 +267,7 @@ public class RutaDAL {
         }
         // Verificar si se va incluir el campo Login en el filtro de la consulta SELECT de la tabla de Usuario
         if (pRuta.getPuntoSalida()!= null && pRuta.getPuntoSalida().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.PuntoSalida=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.PuntoSalida=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getPuntoSalida());
@@ -270,7 +275,7 @@ public class RutaDAL {
         }
         
         if (pRuta.getPuntoLlegada()!= null && pRuta.getPuntoLlegada().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.PuntoLlegada=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.PuntoLlegada=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getPuntoLlegada());
@@ -278,7 +283,7 @@ public class RutaDAL {
         }
         // Verificar si se va incluir el campo Estatus en el filtro de la consulta SELECT de la tabla de Usuario
         if (pRuta.getHoraInicio()!= null && pRuta.getHoraInicio().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.HoraInicio=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.HoraInicio=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getHoraInicio());
@@ -286,7 +291,7 @@ public class RutaDAL {
         }
         
         if (pRuta.getHoraFin()!= null && pRuta.getHoraFin().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.HoraFin=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.HoraFin=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getHoraFin());
@@ -295,7 +300,7 @@ public class RutaDAL {
         }
         
         if (pRuta.getCodigoBus()!= null && pRuta.getCodigoBus().trim().isEmpty() == false) {
-            pUtilQuery.AgregarWhereAnd(" r.CodigoBus=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
+            pUtilQuery.AgregarWhereAnd(" ru.CodigoBus=? "); // agregar el campo Login al filtro de la consulta SELECT y agregar en el WHERE o AND
             if (statement != null) {
                  // agregar el parametro del campo Login a la consulta SELECT de la tabla de Usuario
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getCodigoBus());
@@ -339,8 +344,8 @@ public class RutaDAL {
             sql += obtenerCampos(); // Obtener los campos de la tabla de Usuario que iran en el SELECT
             sql += ",";
             sql += DepartamentoDAL.obtenerCampos(); // Obtener los campos de la tabla de Rol que iran en el SELECT
-            sql += " FROM Ruta r";
-            sql += " JOIN Departamento d on (u.IdDepartamento=d.Id)"; // agregar el join para unir la tabla de Usuario con Rol
+            sql += " FROM Ruta ru";
+            sql += " JOIN Departamento d on (ru.IdDepartamento=d.Id)"; // agregar el join para unir la tabla de Usuario con Rol
             ComunDB comundb = new ComunDB();
             ComunDB.UtilQuery utilQuery = comundb.new UtilQuery(sql, null, 0);
             querySelect(pRuta, utilQuery); // Asignar el filtro a la consulta SELECT de la tabla de Usuario 

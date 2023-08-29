@@ -5,9 +5,9 @@
 package proyectorutas.accesoadatos;
 import java.util.*;
 import java.sql.*;
-import static proyectorutas.accesoadatos.RolDAL.asignarDatosResultSet;
-import static proyectorutas.accesoadatos.RolDAL.obtenerCampos;
-import static proyectorutas.accesoadatos.RolDAL.querySelect;
+import static proyectorutas.accesoadatos.DepartamentoDAL.asignarDatosResultSet;
+import static proyectorutas.accesoadatos.DepartamentoDAL.obtenerCampos;
+import static proyectorutas.accesoadatos.DepartamentoDAL.querySelect;
 import proyectorutas.en.*;
 /**
  *
@@ -17,7 +17,7 @@ public class DepartamentoDAL {
     
     static String obtenerCampos()
     {
-        return "d.Id, d.Nombre";
+        return "d.Id, d.NombreDepartamento";
     }
     private static String obtenerSelect(Departamento pDepartamento)
     {
@@ -48,7 +48,7 @@ public class DepartamentoDAL {
         String sql;
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            sql = "Insert Into Departamento(Nombre) Values(?)";
+            sql = "Insert Into Departamento(NombreDepartamento) Values(?)";
             try(PreparedStatement st = 
                 ComunDB.createPreparedStatement(conn, sql);)
             {
@@ -73,7 +73,7 @@ public class DepartamentoDAL {
         String sql;
         try(Connection conn = ComunDB.obtenerConexion();)
         {
-            sql = "Update Departamento Set Nombre = ? Where Id = ?";
+            sql = "Update Departamento Set NombreDepartamento = ? Where Id = ?";
             try(PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);)
             {
                 ps.setString(1, pDepartamento.getNombreDepartamento());
@@ -212,7 +212,7 @@ public class DepartamentoDAL {
         if(pDepartamento.getNombreDepartamento() != null && 
            pDepartamento.getNombreDepartamento().trim().isEmpty() == false)
         {
-            pUtilQuery.AgregarWhereAnd(" d.Nombre Like ? ");
+            pUtilQuery.AgregarWhereAnd(" d.NombreDepartamento Like ? ");
             if(statement != null)
             {
                 statement.setString(pUtilQuery.getNumWhere(), 

@@ -1,26 +1,25 @@
 <%-- 
-    Document   : indes
-    Created on : 26 ago 2023, 11:45:43
+    Document   : index
+    Created on : 28 ago 2023, 9:06:18
     Author     : MINEDUCYT
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="proyectorutas.en.Usuario" %>
-<%@page import="proyectorutas.en.Rol"%>
+<%@page import="proyectorutas.en.Departamento"%>
 <%@page import="java.util.ArrayList" %>
-<%ArrayList<Usuario> usuarios = 
-                (ArrayList<Usuario>) request.getAttribute("usuarios");
+<%ArrayList<Departamento> departamentos = (ArrayList<Departamento>) request.getAttribute("departamentos");
     int numPage = 1;
     int numReg = 10;
     int countReg = 0;
-    if(usuarios == null)
+    if(departamentos == null)
     {
-        usuarios = new ArrayList();
+        departamentos = new ArrayList();
     }
     else
-        if(usuarios.size() > numReg)
+        if(departamentos.size() > numReg)
         {
-            double divNumPage = (double) usuarios.size() / (double) numReg;
+            double divNumPage = (double) departamentos.size() / (double) numReg;
             numPage = (int) Math.ceil(divNumPage);
         }
     String strTop_aux = request.getParameter("top_aux");
@@ -34,41 +33,20 @@
 <html>
     <head>
         <jsp:include page="/Views/Shared/title.jsp" />
-        <title>Buscar Usuario</title>
+        <title>Buscar Departamento</title>
     </head>
     <body>
         <jsp:include page="/Views/Shared/headerBody.jsp" /> 
         <main class="container">
-           <h5>Buscar Usuario</h5>
-           <form action="Usuario" method="post">
+           <h5>Buscar Departamento</h5>
+           <form action="Departamento" method="post">
                <input type="hidden" name="accion" value="<%request.getAttribute("accion");%>">
                <div class="row">
-                   <div class="input-field col 14 s12">
+                   <div class="input-field col 16 s12">
                        <input type="text" id="txtNombre" name="nombre">
                        <label for="txtNombre">Nombre</label>
                    </div>
-                   <div class="input-field col 14 s12">
-                       <input type="text" id="txtApellido" name="apellido">
-                       <label for="txtApellido">Apellido</label>
-                   </div>
-                   <div class="input-field col 14 s12">
-                       <input type="text" id="txtLogin" name="login">
-                       <label for="txtLogin">Login</label>
-                   </div>
-                   <div class="input-field col 14 s12">
-                       <select id="slEstado" name="estatus">
-                           <option value="0">Seleccionar</option>
-                           <option value="1">ACTIVO</option>
-                           <option value="2">INACTIVO</option>
-                       </select>
-                       <label for="slEstado">Estatus</label>
-                   </div>
-                   <div class="input-field col 14 s12">
-                       <jsp:include page="/Views/Rol/select.jsp">
-                           <jsp:param name="id" value="0"/>
-                       </jsp:include>
-                   </div>
-                   <div class="input-field col 14 s12">
+                   <div class="input-field col 13 s12">
                        <jsp:include page="/Views/Shared/selectTop.jsp">
                            <jsp:param name="top_aux" value="<%=top_aux%>"/>
                        </jsp:include>
@@ -77,7 +55,7 @@
                <div class="row">
                    <div class="input-field col 16 s12">
                        <button type="submit" class="waves-effect waves-ligth btn blue">Buscar</button>
-                       <a href="Usuario?accion=create" class="waves-effect waves-ligth btn blue">Nuevo</a>
+                       <a href="Departamento?accion=create" class="waves-effect waves-ligth btn blue">Nuevo</a>
                    </div>
                </div>
            </form>
@@ -89,17 +67,12 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Login</th>
-                                    <th>Estatus</th>
-                                    <th>Rol</th>
-                                    <th>Fecha Registro</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
-                                for(Usuario usuario:usuarios)
+                                for(Departamento departamento:departamentos)
                                 {
                                    int tempNumPage = numPage;
                                    if(numPage > 1)
@@ -108,28 +81,20 @@
                                         double divTempNumPage = (double) countReg / (double) numReg;
                                         tempNumPage = (int) Math.ceil(divTempNumPage);
                                    }
-                                   
-                                   
                                 %>
                                     <tr data-page="<%=tempNumPage%>">
-                                        <td><%=usuario.getNombre()%></td>
-                                        <td><%=usuario.getApellido()%></td>
-                                        <td><%=usuario.getLogin()%></td>
-                                       <td><%=usuario.getEstatus()%></td>
-
-                                        <td><%=usuario.getRol().getNombreRol()%></td>
-                                        <td><%=usuario.getFechaRegistro()%></td>
+                                        <td><%=departamento.getNombreDepartamento()%></td>
                                         <td>
                                             <div style="display: flex">
-                                                <a href="Usuario?accion=edit&id=<%=usuario.getId()%>" 
+                                                <a href="Departamento?accion=edit&id=<%=departamento.getId()%>" 
                                                    title="Mofificar" class="waves-effect waves-light btn green">
                                                     <i class="material-icons">edit</i>
                                                 </a>
-                                                <a href="Usuario?accion=details&id=<%=usuario.getId()%>" 
+                                                <a href="Departamento?accion=details&id=<%=departamento.getId()%>" 
                                                    title="Ver" class="waves-effect waves-light btn blue">
                                                     <i class="material-icons">description</i>
                                                 </a>
-                                                <a href="Usuario?accion=delete&id=<%=usuario.getId()%>" 
+                                                <a href="Departamento?accion=delete&id=<%=departamento.getId()%>" 
                                                    title="Eliminar" class="waves-effect waves-light btn red">
                                                     <i class="material-icons">delete</i>
                                                 </a>
@@ -153,4 +118,5 @@
         <jsp:include page="/Views/Shared/footerBody.jsp" />
     </body>
 </html>
+
 

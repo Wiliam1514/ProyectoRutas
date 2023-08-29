@@ -6,11 +6,6 @@
         <group name="SeguridadWebG01">
             <file>file:/C:/Users/MINEDUCYT/OneDrive/Documentos/ProyectoRutas/ProyectoRutas.EN/src/proyectorutas/en1/Departamento.java</file>
         </group>
-        <group name="ProyectoRutas">
-            <file>file:/C:/Users/MINEDUCYT/OneDrive/Documentos/ProyectoRutas/ProyectoRutas.EN/src/proyectorutas/en/Ruta.java</file>
-            <file>file:/C:/Users/MINEDUCYT/OneDrive/Documentos/ProyectoRutas/ProyectoRutas.EN/src/proyectorutas/en/Rol.java</file>
-            <file>file:/C:/Users/MINEDUCYT/OneDrive/Documentos/ProyectoRutas/ProyectoRutas.EN/src/proyectorutas/en/Departamento.java</file>
-            <file>file:/C:/Users/MINEDUCYT/OneDrive/Documentos/ProyectoRutas/ProyectoRutas.EN/src/proyectorutas/en/Usuario.java</file>
-        </group>
+        <group name="ProyectoRutas"/>
     </open-files>
 </project-private>

@@ -19,9 +19,10 @@ public class Ruta {
     public Ruta() {
     }
 
-    public Ruta(int id, String nombreRuta, String recorrido, String puntoSalida, String puntoLlegada, String horaInicio,
-               String horaFin, String codigoBus,int top_aux,int idDepartamento) {
+    public Ruta(int id, int idDepartamento, String nombreRuta, String recorrido, String puntoSalida, String puntoLlegada, String horaInicio,
+               String horaFin, String codigoBus,int top_aux, Departamento departamento) {
         this.id = id;
+        this.idDepartamento = idDepartamento;
         this.nombreRuta = nombreRuta;
         this.recorrido = recorrido;
         this.puntoSalida = puntoSalida;
@@ -30,7 +31,8 @@ public class Ruta {
         this.horaFin = horaFin;
         this.codigoBus = codigoBus;
         this.top_aux = top_aux;
-        this.idDepartamento = idDepartamento;
+        this.departamento = departamento;
+        
         
     }
 
@@ -40,6 +42,13 @@ public class Ruta {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public int getIdDepartamento() {
+        return idDepartamento;
+    }
+
+    public void setIdDepartamento(int idDepartamento) {
+        this.idDepartamento = idDepartamento;
     }
 
     public String getNombreRuta() {
@@ -98,13 +107,7 @@ public class Ruta {
         this.top_aux = top_aux;
     }
 
-    public int getIdDepartamento() {
-        return idDepartamento;
-    }
-
-    public void setIdDepartamento(int idDepartamento) {
-        this.idDepartamento = idDepartamento;
-    }
+    
     public Departamento  getDepartamento() {
     return departamento;
     }

@@ -26,11 +26,11 @@ CREATE TABLE Usuario (
 	[FechaRegistro] DateTime not null,
     FOREIGN KEY (IdRol) REFERENCES Rol(id)
 );
-
+USE RutasDB;
 -- Crear tabla Rutas
 CREATE TABLE Ruta (
     Id INT PRIMARY KEY IDENTITY (1,1),
-	IdDepartamento INT,
+	IdDepartamento INT NOT NULL,
     NombreRuta VARCHAR(100) NOT NULL,
     Recorrido VARCHAR(255),
 	PuntoSalida VARCHAR (200)NOT NULL,

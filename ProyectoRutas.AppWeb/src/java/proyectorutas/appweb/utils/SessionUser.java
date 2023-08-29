@@ -79,8 +79,9 @@ public class SessionUser {
 
     
     public static void cerrarSession(HttpServletRequest request)
-    {
-        HttpSession session = (HttpSession) request.getSession();
-        session.invalidate();
-    }
+{
+    HttpSession session = (HttpSession) request.getSession();
+    session.invalidate();
+}
+
 }
