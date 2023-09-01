@@ -79,16 +79,17 @@ public class RutaDAL {
         String sql;
             try (Connection conn = ComunDB.obtenerConexion();) { // Obtener la conexion desde la clase ComunDB y encerrarla en try para cierre automatico
                 //Definir la consulta UPDATE a la tabla de Usuario utilizando el simbolo ? para enviar parametros
-                sql = "UPDATE Ruta SET IdDepartamento=?, NombreRuta=?, PuntoSalida=?, PuntoLlegada=?, HoraInicio=?, HoraFin=?, CodigoBus=? WHERE Id=?";
+                sql = "UPDATE Ruta SET IdDepartamento=?, NombreRuta=?, Recorrido=?, PuntoSalida=?, PuntoLlegada=?, HoraInicio=?, HoraFin=?, CodigoBus=?";
+
                 try (PreparedStatement ps = ComunDB.createPreparedStatement(conn, sql);) { // obtener el PreparedStatement desde la clase ComunDB
-                    ps.setInt(1, pRuta.getIdDepartamento()); // agregar el parametro a la consulta donde estan el simbolo ? #1  
-                    ps.setString(2, pRuta.getNombreRuta());
-                    ps.setString(3, pRuta.getRecorrido());
-                    ps.setString(4, pRuta.getPuntoSalida());
-                    ps.setString(5, pRuta.getPuntoLlegada());
-                    ps.setString(6, pRuta.getHoraInicio());
-                    ps.setString(7, pRuta.getHoraFin());
-                    ps.setString(8, pRuta.getCodigoBus()); 
+ps.setInt(1, pRuta.getIdDepartamento());
+ps.setString(2, pRuta.getNombreRuta());
+ps.setString(3, pRuta.getRecorrido());
+ps.setString(4, pRuta.getPuntoSalida());
+ps.setString(5, pRuta.getPuntoLlegada());
+ps.setString(6, pRuta.getHoraInicio());
+ps.setString(7, pRuta.getHoraFin());
+ps.setString(8, pRuta.getCodigoBus());
                     result = ps.executeUpdate(); // ejecutar la consulta UPDATE en la base de datos
                     ps.close(); // cerrar el PreparedStatement
                 } catch (SQLException ex) {
@@ -141,7 +142,7 @@ public class RutaDAL {
         pIndex++;
         pRuta.setHoraFin(pResultSet.getString(pIndex));
         pIndex++;
-        pRuta.setCodigoBus(pResultSet.getString(pIndex));
+        pRuta.setCodigoBus(pResultSet.getString(pIndex));       
         return pIndex;
     }
     private static void obtenerDatos(PreparedStatement pPS, ArrayList<Ruta> pRutas) throws Exception {
@@ -306,6 +307,7 @@ public class RutaDAL {
                 statement.setString(pUtilQuery.getNumWhere(), pRuta.getCodigoBus());
             }
         }
+        
     }
      public static ArrayList<Ruta> buscar(Ruta pRuta) throws Exception {
         ArrayList<Ruta> rutas = new ArrayList();

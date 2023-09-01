@@ -3,13 +3,6 @@
     Created on : 28 ago 2023, 9:06:02
     Author     : MINEDUCYT
 --%>
-
-<%-- 
-    Document   : details
-    Created on : 26 ago 2023, 11:42:31
-    Author     : MINEDUCYT
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="proyectorutas.en.Departamento" %>
 <% Departamento departamento = (Departamento) request.getAttribute("departamento");%>
@@ -37,10 +30,10 @@
                 </div>
                 <div class="row">
                     <div class="col 112 s12">
-                        <a href="Rol?accion=edit&id=<%=departamento.getId()%>" class="waves-effect waves-light btn blue">
+                        <a href="Departamento?accion=edit&id=<%=departamento.getId()%>" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">edit</i>Ir a Editar
                         </a>
-                        <a href="Rol" class="waves-effect waves-light btn blue">
+                        <a href="Departamento" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">list</i>Cancelar
                         </a>
                     </div>

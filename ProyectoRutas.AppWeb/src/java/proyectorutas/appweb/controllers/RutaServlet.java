@@ -30,6 +30,7 @@ public class RutaServlet extends HttpServlet {
                 "index");
         Ruta ruta = new Ruta();
         
+        
         ruta.setIdDepartamento(Integer.parseInt(Utilidad.getParameter(request, 
                 "idDepartamento", "0")));
         ruta.setNombreRuta(Utilidad.getParameter(request, "nombreRuta", 
@@ -48,9 +49,10 @@ public class RutaServlet extends HttpServlet {
         
          ruta.setHoraFin(Utilidad.getParameter(request, 
                 "horaFin", "0"));
-         ruta.setCodigoBus(Utilidad.getParameter(request, 
-                "codigoBus", "0"));
-            
+         
+         ruta.setCodigoBus(Utilidad.getParameter(request,
+                 "codigoBus", "0"));
+      
             ruta.setId(Integer.parseInt(Utilidad.getParameter(request, 
                 "id", "0")));
      
@@ -164,7 +166,7 @@ public class RutaServlet extends HttpServlet {
             }
             else
             {
-                Utilidad.enviarError("Error al Actualizar el Regisgtro", request, response);
+                Utilidad.enviarError("Error al Actualizar el Registro", request, response);
             }
 
         }
@@ -223,6 +225,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 request.setAttribute("accion", accion);
                 doGetRequestIndex(request, response);
                 break;
+                
             case "create":
                 request.setAttribute("accion", accion);
                 doGetRequestCreate(request, response);

@@ -3,13 +3,7 @@
     Created on : 28 ago 2023, 18:52:44
     Author     : MINEDUCYT
 --%>
-
-<%-- 
-    Document   : indes
-    Created on : 26 ago 2023, 11:45:43
-    Author     : MINEDUCYT
---%>
-<%@page import="proyectorutas.appweb.utils.SessionUser" %>
+ import="proyectorutas.appweb.utils.SessionUser" %>
 <%
     String rolUsuario = SessionUser.getRol(request);
     out.println("Rol del usuario: " + rolUsuario); // Muestra el valor del rol en la consola o página.
@@ -57,22 +51,7 @@
                    <input type="text" id="txtRecorrido" name="recorrido">
                    <label for="txtRecorrido">Recorrido</label>
                </div>
-               <div class="input-field col 14 s12">
-                   <input type="text" id="txtPuntoSalida" name="puntoSalida">
-                   <label for="txtPuntoSalida">punto salida</label>
-               </div>
-               <div class="input-field col 14 s12">
-                   <input type="text" id="txtPuntoLlegada" name="puntoLlegada">
-                   <label for="txtPuntoLlegada">punto Llegada</label>
-               </div>
-               <div class="input-field col 14 s12">
-                   <input type="text" id="txtHoraInicio" name="horaInicio">
-                   <label for="txtHoraInicio">Hora inicio</label>
-               </div>
-               <div class="input-field col 14 s12">
-                   <input type="text" id="txtHoraFin" name="horaFin">
-                   <label for="txtHoraFin">Hora FIN</label>
-               </div>
+               
                
                <div class="input-field col 14 s12">
                    <jsp:include page="/Views/Departamento/select.jsp">
@@ -103,14 +82,12 @@
                            <tr>
                                <th>Departamento</th>
                                <th>Nombre</th>
+                               <!-- <th>Punto de Salida</th> -->
                                <th>Recorrido</th>
-                               <th>Punto de Salida</th>
-                               <th>Punto de Llegada</th>
-                               <th>Hora de Inicio</th>
-                               <th>Hora de Fin</th>
-                               <th>Código de Bus</th>
-                               
-                             
+                               <!-- <th>Punto de Llegada</th> -->
+                               <!-- <th>Hora de Inicio</th> -->
+                               <!-- <th>Hora de Fin</th> -->
+                               <!-- <th>Código de Bus</th> -->
                            </tr>
                        </thead>
                        <tbody>
@@ -127,13 +104,26 @@
                                 <td><%=ruta.getDepartamento().getNombreDepartamento()%></td>
                                <td><%=ruta.getNombreRuta()%></td>
                                <td><%=ruta.getRecorrido()%></td>
-                               <td><%=ruta.getPuntoSalida()%></td>
-                               <td><%=ruta.getPuntoLlegada()%></td>
-                               <td><%=ruta.getHoraInicio()%></td>
-                               <td><%=ruta.getHoraFin()%></td>
-                               <td><%=ruta.getCodigoBus()%></td>
                                
-                               <td><!-- Acciones --></td>
+                               <td>
+                                            <div style="display: flex">
+    <a href="Ruta?accion=details&id=<%=ruta.getId()%>" 
+        title="Ver" class="waves-effect waves-light btn blue">
+        <i class="material-icons">description</i>
+    </a>
+    <% if ("Administrador".equals(rolUsuario)) { %>
+        <a href="Ruta?accion=edit&id=<%=ruta.getId()%>" 
+            title="Modificar" class="waves-effect waves-light btn green">
+            <i class="material-icons">edit</i>
+        </a>
+        <a href="Ruta?accion=delete&id=<%=ruta.getId()%>" 
+            title="Eliminar" class="waves-effect waves-light btn red">
+            <i class="material-icons">delete</i>
+        </a>
+    <% } %>
+</div>
+
+                                        </td>
                            </tr>
                            <%
                            }

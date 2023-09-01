@@ -35,7 +35,7 @@
                         <button type="submit" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">save</i>Guardar
                         </button>
-                        <a href="Rol" class="waves-effect waves-light btn blue">
+                        <a href="Departamento" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">list</i>Cancelar
                         </a>
                     </div>

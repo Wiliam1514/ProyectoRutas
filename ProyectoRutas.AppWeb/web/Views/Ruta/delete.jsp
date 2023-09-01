@@ -3,13 +3,6 @@
     Created on : 28 ago 2023, 18:52:20
     Author     : MINEDUCYT
 --%>
-
-<%-- 
-    Document   : delete
-    Created on : 26 ago 2023, 11:45:24
-    Author     : MINEDUCYT
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="proyectorutas.en.Ruta" %>
 <% Ruta ruta = (Ruta) request.getAttribute("ruta");%>
@@ -57,7 +50,7 @@
                         <button type="submit" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">delete</i>Eliminar
                         </button>
-                        <a href="Usuario" class="waves-effect waves-light btn blue">
+                        <a href="Ruta" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">list</i>Cancelar
                         </a>
                     </div>

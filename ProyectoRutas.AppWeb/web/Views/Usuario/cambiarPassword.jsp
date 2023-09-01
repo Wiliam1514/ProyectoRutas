@@ -54,7 +54,7 @@
                         <button type="submit" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">swap_horiz</i>Cambiar Password
                         </button>
-                        <a href="Home" class="waves-effect waves-light btn blue">
+                        <a href="Usuario" class="waves-effect waves-light btn blue">
                             <i class="material-icons right">list</i>Inicio
                         </a>
                     </div>
